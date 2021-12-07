@@ -1,0 +1,6 @@
+# Files to ignore. For all, we will only keep the README files
+
+# All Access databases
+**/*.accdb
+**/*.laccdb
+
