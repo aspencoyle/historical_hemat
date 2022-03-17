@@ -1,0 +1,171 @@
+---
+title: "1_3_summarizing_jensen_files.Rmd"
+author: "Aidan Coyle"
+date: "2/10/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Description
+
+This is a summary of the available samples that the Roberts lab (to the best of our knowledge) has available to us.
+
+```{r libraries, message=FALSE, warning=FALSE}
+# Add all required libraries here
+list.of.packages <- c("tidyverse", "rnaturalearth", "rnaturalearthdata", "sf", "rgeos")
+# Get names of all required packages that aren't installed
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[, "Package"])]
+# Install all new packages
+if(length(new.packages)) install.packages(new.packages)
+
+
+# Load all required libraries
+lapply(list.of.packages, FUN = function(X) {
+  do.call("require", list(X))
+})
+```
+
+
+
+
+## Describing Potential Spatial Examinations (Hematodinium-only)
+
+For this, we only care about samples that are definitively positive for _Hematodinium_ infections, as determined by PCR.
+
+
+
+```{r}
+# Read in data on Hematodinium infections
+hemat.dat <- read.delim(file = "../output/jensen_cleaned_data/relevant_sample_data.txt")
+
+# Filter out samples that aren't positive for Hematodinium
+hemat.dat <- hemat.dat %>%
+  dplyr::filter(BCS_PCR_results == 1)
+
+# Produce map of Hematodinium-positive samples
+world <- ne_countries(scale = "medium", returnclass = "sf")
+ggplot(data = world) +
+  geom_sf() +
+  geom_count(data = hemat.dat, aes(x = Longitude, y = Latitude), shape = 23, fill = "red", position = "jitter") +
+  coord_sf(xlim = c(-180, -120), ylim = c(50, 70), expand = FALSE) +
+  scale_size_area()
+
+# Produce map of Hematodinium-positive samples in Bering Sea area
+ggplot(data = world) +
+  geom_sf() +
+  geom_count(data = hemat.dat, aes(x = Longitude, y = Latitude), shape = 23, fill = "red", position = "jitter") +
+  coord_sf(xlim = c(-179, -155), ylim = c(50, 67), expand = FALSE) +
+  scale_size_area()
+
+# Produce map of Hematodinium-positive samples in GOA area
+ggplot(data = world) +
+  geom_sf() +
+  geom_count(data = hemat.dat, aes(x = Longitude, y = Latitude), shape = 23, fill = "red", position = "jitter") +
+  coord_sf(xlim = c(-161, -151), ylim = c(56, 59), expand = FALSE) +
+  scale_size_area()
+
+
+# Produce map of Hematodinium-positive samples in GOA area
+ggplot(data = world) +
+  geom_sf() +
+  geom_count(data = hemat.dat, aes(x = Longitude, y = Latitude), shape = 23, fill = "red", position = "jitter") +
+  coord_sf(xlim = c(-161, -151), ylim = c(56, 59), expand = FALSE) +
+  scale_size_area()
+
+# Produce map of Hematodinium-positive samples in SE AK area
+ggplot(data = world) +
+  geom_sf() +
+  geom_count(data = hemat.dat, aes(x = Longitude, y = Latitude), shape = 23, fill = "red", position = "jitter") +
+  coord_sf(xlim = c(-141, -121), ylim = c(50, 65), expand = FALSE) +
+  scale_size_area()
+
+# Produce summary table of general location
+table(hemat.dat$General_Location)
+
+# Produce summary table of specific location
+table(hemat.dat$Specific_Location, useNA = "ifany")
+
+# Produce summary table of both
+table(hemat.dat$General_Location, hemat.dat$Specific_Location)
+
+# Produce summary table of year
+table(hemat.dat$Year)
+
+table(hemat.dat$Year, hemat.dat$General_Location)
+
+table(hemat.dat$Species_Name, hemat.dat$General_Location)
+
+ber.dat <- hemat.dat %>%
+  filter(General_Location == "BS")
+
+table(ber.dat$Year, ber.dat$Species_Name)
+
+hemat.dat %>%
+  filter(Latitude > 63.5) %>%
+  NROW()
+
+#### CHOOSE TANNER CRAB SAMPLES TO EXAMINE ---------------------
+inf_tanner.dat <- hemat.dat %>%
+  filter(Species_Name == "Chionoecetes bairdi")
+
+table(inf_tanner.dat$Year, inf_tanner.dat$General_Location)
+
+snow.dat <- hemat.dat %>%
+  filter(Species_Name == "Chionoecetes opilio")
+
+table(snow.dat$Year, snow.dat$General_Location)
+
+table(tanner.dat$Year, tanner.dat$General_Location)
+
+table(snow.dat$Year, snow.dat$General_Location)
+
+table(crab.dat$Species_Name)
+
+
+```
+
+
+## Examination of crab samples
+
+```{r}
+crab.dat <- read.delim(file = "../output/jensen_cleaned_data/relevant_sample_data.txt")
+
+tanner.dat <- crab.dat %>%
+  filter(Species_Name == "Chionoecetes bairdi")
+
+snow.dat <- crab.dat %>%
+  filter(Species_Name == "Chionoecetes opilio")
+
+table(tanner.dat$Year, tanner.dat$General_Location)
+
+table(snow.dat$Year, snow.dat$General_Location)
+
+table(crab.dat$Species_Name)
+
+```
+
+
+## Created Tanner crab sampling list
+
+Read in the file of our planned sampling pattern
+
+Format is Total Crabs (Infected)
+So, for instance, if a year/location combo has 100 samples and 50 are infected, it'd be 100 (50)
+
+This isn't really proper, but is readable, and this is for a presentation anyways.
+
+```{r}
+plan.dat <- read.delim(file = "../data/planned_sampling_all_2021_03_02.csv",
+                       sep = ",")
+
+plan.dat
+
+inf.plan.dat <- read.delim(file = "../data/planned_sampling_inf_2021_03_02.csv",
+                           sep = ",")
+
+inf.plan.dat
+```
+
