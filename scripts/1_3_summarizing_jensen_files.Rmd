@@ -1,6 +1,6 @@
 ---
 title: "1_3_summarizing_jensen_files.Rmd"
-author: "Aidan Coyle"
+author: "Aspen Coyle"
 date: "2/10/2022"
 output: html_document
 ---
@@ -39,7 +39,8 @@ For this, we only care about samples that are definitively positive for _Hematod
 
 ```{r}
 # Read in data on Hematodinium infections
-hemat.dat <- read.delim(file = "../output/jensen_cleaned_data/relevant_sample_data.txt")
+hemat.dat <- read.delim(file = "../analyses/jensen_cleaned_data/relevant_sample_data.txt")
+
 
 # Filter out samples that aren't positive for Hematodinium
 hemat.dat <- hemat.dat %>%
@@ -118,7 +119,7 @@ snow.dat <- hemat.dat %>%
 
 table(snow.dat$Year, snow.dat$General_Location)
 
-table(tanner.dat$Year, tanner.dat$General_Location)
+table(inf_tanner.dat$Year, inf_tanner.dat$General_Location)
 
 table(snow.dat$Year, snow.dat$General_Location)
 

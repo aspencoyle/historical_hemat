@@ -1,6 +1,6 @@
 ---
 title: "1_2_merging_jensen_files"
-author: "Aidan Coyle"
+author: "Aspen Coyle"
 date: "12/06/2021"
 output: html_document
 ---
